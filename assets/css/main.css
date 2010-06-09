@@ -1,0 +1,12 @@
+html, body {height:100%; background-color:#cccccc; color:#000000; font: 13px/1.3 "Lucida Grande", Lucida, Verdana, sans-serif;}
+a{color:#888888;}
+a:hover, a:active, a.selected{text-decoration:underline;}
+a:focus{outline:none;}
+h1, h2, h3, h4, h5{font-weight:normal;}
+h1{font-size:36px; text-align:center; background-color:#000000; color:#fff;}
+h2 {font-size:22px;}
+
+#document{width:940px; margin:0 auto;}
+#content {background-color:#fff;}
+#content #map{width:100%; height:600px;}
+#content p{padding:20px 0; text-align:center;}
