@@ -6,6 +6,6 @@ admin.autodiscover()
 
 urlpatterns = patterns('picasa-maps.data.views',
     (r'^latlong/$', 'latlong'),
-    #(r'^albums/(?P<location_name>\d+)/$', 'albums'),
+    (r'^albums/(?P<location_id>\d+)/$', 'albums'),
     #(r'^photos/(?P<album_name>\d+)/$', 'albums'),
 )

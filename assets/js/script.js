@@ -1,67 +1,46 @@
-//xx TODO - wrap Album into class & get pictures
-//xx TODO - set center dynamically
-//xx TODO - figure out JSON problem with Geocoder API
-
+//xxx TODO - update this API so it uses v3, not v2!
+//xxx TODO - fix latlng once i update on backend
 
 (function($) {
-	var map, geocoder, albums = [];
+	var map, albums = [];
 	
 	$(document).ready(function(){
 		initMap();
-		getAlbums();
-
+		createMarkers();
 	});	
 	
 	function initMap()
 	{
-		geocoder = new GClientGeocoder();
 		map = new GMap2($("div#map") .get(0));
 		map.setCenter(new GLatLng(30, -55), 3);
 		map.setUIToDefault();
 	}
 	
-	function getAlbums(){
-		$.getJSON('http://picasaweb.google.com/data/feed/api/user/mikesorvillo?alt=json', function(data) {
-			albums = data.feed.entry;
-			iterate(0);
-			
-			/*for(var i = 0; i < albums.length; i++){
-				console.log(i + " - " + albums[i].gphoto$location.$t);
-				$.getJSON("http://maps.google.com/maps/api/geocode/json?address=" + albums[i].gphoto$location.$t + "&sensor=false", function(data){
-					alert("HELLO")
-				});
-				
-				geocoder.getLatLng(albums[i].gphoto$location.$t, onAddressFound);
-			} */ 	
-		})			
+	function createMarkers(point){
+	    $.getJSON('http://localhost:8000/data/latlong/', function(data){
+	        $(data).each(function(index){
+	            loc = data[index];
+	            latlng = (loc['fields']['latlng']).split(", ");
+	            var marker = new GMarker(new GLatLng(latlng[0], latlng[1], false))
+	            marker.table_id = loc['pk'];
+	            marker.location_name = loc['fields']['name'];
+	            map.addOverlay(marker);
+	        });
+	    });
+	    GEvent.addListener(map, "click", showName);
 	}
 	
-	//using setTimeout for recursion. god, this is so hacky.
-	function iterate(count){
-		geocoder.getLatLng(albums[count].gphoto$location.$t, onAddressFound);
-		count++;
-		
-		if(count < albums.length){
-			setTimeout(function(){iterate(count)}, 200);
-		}
-	}
-	
-	function onAddressFound(point){
-		if (!point) {
-	    } else {
-	      	var marker = new GMarker(point);
-	      	map.addOverlay(marker);
-		  	GEvent.addListener(marker, "click", showPics);
+	function showName(obj){
+	    if(obj){
+	        $.getJSON('http://localhost:8000/data/albums/' + obj.table_id + "/", function(data){
+    	        str = ""
+    	        $(data).each(function(index){
+                    str += data[index]['fields']['name'] + "<br/>";
+    	        });
+	            obj.openInfoWindow("<strong>" + obj.location_name + "</strong><br/><br/>" + str)
+    	    });
+
 	    }
-	}
-	
-	function showPics(){
-		//console.log("showing pictures for...")
-	}
-	
-	function Album(id, loc){
-		this.albumId = id;
-		this.location = loc;
 	}
 	
 })(jQuery);

@@ -1,13 +1,10 @@
 from django.http import HttpResponse
 from models import Location, Album, Photo
 from django.core import serializers
-from dbhelper import DBHelper
+import dbhelper
 import httplib
 import json
 
-def index(request):
-    return HttpResponse("Show the homepage")
-    
 
 def latlong(request):
     """Returns JSON of latlongs from the DB. If they don't exist in DB, we import the data from picasa"""
@@ -18,16 +15,18 @@ def latlong(request):
     response = json.loads(conn.getresponse().read())
     albums = response['feed']['entry']    
     
-    #if we have new albums, lets import them
+    #import any new albums we have
     if len(albums) != Album.objects.count():
-        DBHelper().importData(albums, startIndex=Album.objects.count())
+        dbhelper.importAlbums(albums)
     
+    conn.close()
     return HttpResponse(serializers.serialize("json", Location.objects.all()))
     
 
 
-def albums(request):
-    return HttpResponse("Given location, returns multiple albums (if multiple) - if not, returns photos in album")
+def albums(request, location_id):
+    """Given locationID, returns JSON of albums in that location from DB"""
+    return HttpResponse(serializers.serialize("json", Album.objects.filter(location=location_id)))
     
 def photos(request):
     return HttpResponse("Given album, returns photos in album")

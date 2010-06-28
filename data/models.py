@@ -1,10 +1,9 @@
 from django.db import models
 
-
+#xxx TODO - break up latlng into two fields
 class Location(models.Model):
     name = models.CharField(max_length=200)
-    lat = models.DecimalField(max_digits=10, decimal_places=5)
-    long = models.DecimalField(max_digits=10, decimal_places=5)
+    latlng = models.CharField(max_length=100)
 
     def __unicode__(self):
         return self.name 
@@ -12,7 +11,9 @@ class Location(models.Model):
 
 class Album(models.Model):
     name = models.CharField(max_length=200)
-    url = models.URLField(max_length=500)
+    cover = models.URLField(max_length=500)
+    publicurl = models.URLField(max_length=500)
+    apiurl = models.URLField(max_length=500)
     location = models.ForeignKey(Location)
 
     def __unicode__(self):
