@@ -7,8 +7,9 @@ def importAlbums(album_list):
     """Takes a list of albums, and creates album and location entries in DB"""
 
     for album in album_list:
-        point = (album['georss$where']['gml$Point']['gml$pos']['$t']).replace(" ", ", ")
-        loc_obj, created = Location.objects.get_or_create(name=album['gphoto$location']['$t'], defaults={'latlng':point})
+        point = str(album['georss$where']['gml$Point']['gml$pos']['$t'])
+        pointStr = point.split(" ")
+        loc_obj, created = Location.objects.get_or_create(name=album['gphoto$location']['$t'], defaults={'lat':pointStr[0], 'lng': pointStr[1]})
         Album.objects.get_or_create(name=album['title']['$t'],
                              cover=album['media$group']['media$thumbnail'][0]['url'],
                              publicurl=album['link'][1]['href'],

@@ -22,9 +22,8 @@
 	    $.getJSON('http://localhost:8000/data/latlong/', function(data){
 	        $(data).each(function(index){
 	            loc = data[index];
-	            latlng = (loc['fields']['latlng']).split(", ");
 	            var marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(latlng[0], latlng[1]), 
+                    position: new google.maps.LatLng(loc['fields']['lat'], loc['fields']['lng']), 
                     map: map, 
                     title: loc['fields']['name'],
                     table_id: loc['pk']

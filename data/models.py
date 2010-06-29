@@ -3,7 +3,8 @@ from django.db import models
 #xxx TODO - break up latlng into two fields
 class Location(models.Model):
     name = models.CharField(max_length=200)
-    latlng = models.CharField(max_length=100)
+    lat = models.DecimalField(max_digits=11, decimal_places=8)
+    lng = models.DecimalField(max_digits=11, decimal_places=8)
 
     def __unicode__(self):
         return self.name 

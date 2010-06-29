@@ -8,7 +8,7 @@ class AlbumInline(admin.TabularInline):
     
 class LocationAdmin(admin.ModelAdmin):
     inlines = [AlbumInline]
-    list_display = ('name', 'latlng') 
+    list_display = ('name', 'lat', 'lng') 
 
 class PhotoInline(admin.TabularInline):
     model = Photo
