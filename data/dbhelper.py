@@ -2,6 +2,7 @@ from models import Location, Album, Photo
 import urllib
 import json
 import time
+import datetime
 
 def importAlbums(album_list):
     """Takes a list of albums, and creates album and location entries in DB"""
@@ -14,8 +15,8 @@ def importAlbums(album_list):
                              cover=album['media$group']['media$thumbnail'][0]['url'],
                              publicurl=album['link'][1]['href'],
                              apiurl=album['id']['$t'],
-                             location=loc_obj)
-                             
+                             date = datetime.datetime.strptime(album['published']['$t'], "%Y-%m-%dT%H:%M:%S.000Z"),
+                             location=loc_obj)           
                              
                              
         """locationList = [x['gphoto$location']['$t'] for x in albums]
