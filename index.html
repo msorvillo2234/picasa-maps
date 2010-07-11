@@ -12,22 +12,28 @@
     <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/global.css" />
     <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/main.css" media="screen, projection" />
     <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/print.css" media="print" />
+	<link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/ui-lightness/jquery-ui-1.8.2.custom.css" />
     <link rel="icon" type="image/x-icon" href="{{MEDIA_URL}}img/favicon.ico" />
 
     <!-- Javascripts -->
 	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.0/jquery.min.js" ></script>
+	<script type="text/javascript" src="{{MEDIA_URL}}js/jquery-ui-1.8.2.custom.min.js"></script>	
 	<script type="text/javascript" src="{{MEDIA_URL}}js/script.js"></script>
 
 
 </head>
 <body>
    	<div id="document">
-		<h1>Nomadic Mike.</h1>
+		<div id="header" class="clearfix">
+			<h1>Mike's travels from:</h1>
+			<p id="range">Hi</p>
+			<div id="slider"></div>
+		</div>
 		<div id="content">
 			<div id="map"></div>
 			<div id="preview">
-				<p>Picture previews will go here. When I click, we will do something with a gallery</p>
+				<p>Something down here</p>
 			</div>
 		</div>
 	</div>

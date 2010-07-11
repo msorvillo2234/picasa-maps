@@ -1,11 +1,12 @@
 //xxx TODO - fix latlng once i update on backend
 
 (function($) {
-	var map, openWindow;
+	var map, openWindow, minDate = "", maxDate = "";
 	
-	$(document).ready(function(){
-		initMap();
-		createMarkers();
+	$(document).ready(function(){    
+		//initMap();
+		//createMarkers();
+	    initSlider();
 	});	
 	
 	function initMap()
@@ -54,6 +55,64 @@
     	    });
 
 	    }
+	}
+	
+	function initSlider(){
+	    $.getJSON('http://localhost:8000/data/latlong/12', function(data){
+	        $(data).each(function(index){
+	            curDate = parseDate(data[index]['fields']['date']);
+                if(minDate == "" && maxDate == ""){ 
+                    minDate = curDate;
+                    maxDate = curDate;
+                }
+                else if(curDate < minDate){ 
+                    minDate = curDate;
+                }
+                else if(curDate > maxDate){ 
+                    maxDate = curDate;
+                }
+	        });
+	    });
+    
+        $("#slider").slider({
+			range: true,
+			min: 0,
+			max: 500,
+			values: [0, 500],
+			slide: function(event, ui) {
+				$("#header p").text(ui.values[0] + ' - ' + ui.values[1]);
+			}
+		});
+		$("#header p").text($("#slider").slider("values", 0) + ' - ' + $("#slider").slider("values", 1));
+		
+    
+	}
+	
+	/***************************** DATE HELPERS *****************************/
+	
+	function parseDate(posixdate){
+	    date = posixdate.split(" ")[0].split("-")
+	    time = posixdate.split(" ")[1].split(":")
+	    return new Date(Number(date[0]), 
+	                    Number(date[1]) - 1, 
+	                    Number(date[2]), 
+	                    Number(time[0]), 
+	                    Number(time[1]), 
+	                    Number(time[2]));
+	}
+	
+	function getStep(){
+	    minMonths = minDate.getMonth() + (minDate.getFullYear()*12)
+        maxMonths = maxDate.getMonth() + (maxDate.getFullYear()*12) 
+        return maxMonths - minMonths
+	}
+	
+	function dateToInt(date){
+	    retur
+	}
+	
+	function intToDate(int){
+	    
 	}
 	
 })(jQuery);

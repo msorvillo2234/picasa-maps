@@ -6,7 +6,7 @@ import httplib
 import json
 
 
-def latlong(request):
+def latlong(request, date=None):
     """Returns JSON of latlongs from the DB. If they don't exist in DB, we import the data from picasa"""
     
     #request picasa albums, encode into JSON
@@ -14,14 +14,17 @@ def latlong(request):
     conn.request("GET", "/data/feed/api/user/mikesorvillo?alt=json")
     response = json.loads(conn.getresponse().read())
     albums = response['feed']['entry']    
-    
+        
     #import any new albums we have
     if len(albums) != Album.objects.count():
         dbhelper.importAlbums(albums)
     
     conn.close()
-    return HttpResponse(serializers.serialize("json", Location.objects.all()))
     
+    if date == None:
+        return HttpResponse(serializers.serialize("json", Location.objects.all()))
+    else:
+        return HttpResponse(serializers.serialize("json", Album.objects.all()))
 
 
 def albums(request, location_id):
