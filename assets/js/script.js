@@ -17,9 +17,11 @@
         };
         map = new google.maps.Map($("div#map").get(0), myOptions);  
         $.getJSON('http://localhost:8000/data/latlong/', createMarkers);
+        
 	}
 		
 	function createMarkers(data){
+
 	    //close openwindows
         if(openWindow){
             openWindow.close();

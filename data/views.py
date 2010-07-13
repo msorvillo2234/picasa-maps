@@ -1,12 +1,12 @@
 from django.http import HttpResponse
 from models import Location, Album, Photo
 from django.core import serializers
+from django.db.models import Max, Min
 import datetime
 import dbhelper
 import httplib
 import json
 
-#xxx TODO - calling latlong/range is not giving uniques from DB. why?
 def latlong(request, daterange=None):
     """Returns JSON of latlongs from the DB. If they don't exist in DB, we import the data from picasa"""
     
@@ -24,21 +24,27 @@ def latlong(request, daterange=None):
     
     #if we have a range, scope to the range
     if daterange == None:
+        mindate = Album.objects.aggregate(Min('date'))
+        strmin = (mindate['date__min']).isoformat()
+        maxdate = Album.objects.aggregate(Max('date'))
+        strmax = (maxdate['date__max']).isoformat()
         return HttpResponse(serializers.serialize("json", Location.objects.all()))
     else:
         ary = daterange.split(":")
         lower = datetime.datetime.strptime(ary[0], "%m-%d-%Y")
         upper = datetime.datetime.strptime(ary[1], "%m-%d-%Y")
-        return HttpResponse(serializers.serialize("json", Location.objects.filter(album__date__range=(lower, upper))))
+        locs = Location.objects.filter(album__date__range=(lower, upper))
+        return HttpResponse(serializers.serialize("json", set(locs)))
 
+def getminmax():
+    print 0
 
-#xxx TODO - refactor this method so it just returns a range for the slider
 def getallalbums(request):
-    """Returns JSON of all albums in album table"""
+    """Returns JSON of all albums from DB"""
     return HttpResponse(serializers.serialize("json", Album.objects.all()))
 
-
-def getalbum(request, location_id):
+#xxx TODO - refactor this method so it just returns a range for the slider
+def getalbums(request, location_id):
     """Given locationID, returns JSON of albums in that location from DB"""
     return HttpResponse(serializers.serialize("json", Album.objects.filter(location=location_id)))
  
