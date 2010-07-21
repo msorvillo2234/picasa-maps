@@ -2,10 +2,17 @@ from django.http import HttpResponse
 from models import Location, Album, Photo
 from django.core import serializers
 from django.db.models import Max, Min
+from decimal import Decimal
 import datetime
 import dbhelper
 import httplib
 import json
+
+class MyJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return "%s" % obj
+        return json.JSONEncoder.default(self,obj)
 
 def latlong(request, daterange=None):
     """Returns JSON of latlongs from the DB. If they don't exist in DB, we import the data from picasa"""
@@ -28,7 +35,8 @@ def latlong(request, daterange=None):
         strmin = (mindate['date__min']).isoformat()
         maxdate = Album.objects.aggregate(Max('date'))
         strmax = (maxdate['date__max']).isoformat()
-        return HttpResponse(serializers.serialize("json", Location.objects.all()))
+        feed = [{'min':strmin, 'max':strmax, 'locations':serializers.serialize("python", Location.objects.all())}]
+        return HttpResponse(json.dumps(feed, cls=MyJSONEncoder))
     else:
         ary = daterange.split(":")
         lower = datetime.datetime.strptime(ary[0], "%m-%d-%Y")

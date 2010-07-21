@@ -21,7 +21,7 @@
 	}
 		
 	function createMarkers(data){
-
+    
 	    //close openwindows
         if(openWindow){
             openWindow.close();
@@ -33,7 +33,8 @@
         }
 	    
 	    //iterate and create markers for all json location data
-	    $(data).each(function(index){
+	    locs = data['locations']
+	    $(locs).each(function(index){
             loc = data[index];
             var marker = new google.maps.Marker({
                 position: new google.maps.LatLng(loc['fields']['lat'], loc['fields']['lng']), 
