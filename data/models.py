@@ -13,8 +13,8 @@ class Location(models.Model):
 class Album(models.Model):
     name = models.CharField(max_length=200)
     cover = models.URLField(max_length=500)
-    publicurl = models.URLField(max_length=500)
-    apiurl = models.URLField(max_length=500)
+    url = models.URLField(max_length=500)
+    feed = models.URLField(max_length=500)
     date = models.DateTimeField()
     location = models.ForeignKey(Location)
 

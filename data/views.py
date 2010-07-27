@@ -1,3 +1,5 @@
+#xxx TODO - try to overhaul time to use datetime? (need to divide by 1000)
+
 from django.http import HttpResponse
 from models import Location, Album, Photo
 from django.core import serializers
@@ -43,14 +45,17 @@ def getallalbums(request):
     return HttpResponse(serializers.serialize("json", Album.objects.all()))
 
 
-def getalbums(request, location_id):
-    """Given locationID, returns JSON of albums in that location from DB"""
-    return HttpResponse(serializers.serialize("json", Album.objects.filter(location=location_id)))
- 
- 
-def photos(request):
-    return HttpResponse("Given album, returns photos in album")
+def getalbums(request, location_id, daterange=None):
+    """Given locationID and dateranage, returns JSON of albums in that location from DB"""
     
-    
+    if daterange == None:
+        return HttpResponse(serializers.serialize("json", Album.objects.filter(location=location_id)))
+    else:
+        ary = daterange.split(":")
+        lower = datetime.datetime.strptime(ary[0], "%m-%d-%Y")
+        upper = datetime.datetime.strptime(ary[1], "%m-%d-%Y")
+        albums = serializers.serialize("json", set(Album.objects.filter(location=location_id, date__range=(lower, upper))))
+        return HttpResponse(albums)
+ 
     
 #locs = ["name:%s, lat:%s long:%s" % (loc.name, loc.lat, loc.long) for loc in list]

@@ -9,5 +9,5 @@ urlpatterns = patterns('picasa-maps.data.views',
     (r'^latlong/(?P<daterange>.+)/$', 'latlong'),
     (r'^albums/$', 'getallalbums'),
     (r'^albums/(?P<location_id>\d+)/$', 'getalbums'),
-    #(r'^photos/(?P<album_name>\d+)/$', 'albums'),
+    (r'^albums/(?P<location_id>\d+)/(?P<daterange>.+)/$', 'getalbums'),
 )

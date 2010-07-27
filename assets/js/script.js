@@ -1,8 +1,7 @@
-//xxx TODO - get albums/id to only return albums in a given range
 //xxx TODO - get jqueryui to call google code version?
 
 (function($) {
-	var map, openWindow, markers = [], sliderInit = false, sliderMin = -1, sliderMax = -1;
+	var map, openWindow, markers = [], sliderInit = false, lowerStr = "", upperStr = "", sliderMin = -1, sliderMax = -1;
 	
 	$(document).ready(function(){    
 		initMap();
@@ -16,8 +15,16 @@
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         map = new google.maps.Map($("div#map").get(0), myOptions);  
-        $.getJSON('http://localhost:8000/data/latlong/', createMarkers);
-        
+        $.getJSON('http://localhost:8000/data/latlong/', createMarkers); 
+	}
+		
+	function updateMarkers(){
+	    var lower = new Date($("#slider").slider("values", 0))
+	    var upper = new Date($("#slider").slider("values", 1))
+	    lowerStr = (lower.getMonth()+1) + "-01-" + lower.getFullYear();
+	    var lastUpperDate = (new Date((new Date(upper.getYear(), upper.getMonth()+1,1))-1)).getDate();
+	    upperStr = (upper.getMonth()+1) + "-" + lastUpperDate + "-" + upper.getFullYear();
+	    $.getJSON('http://localhost:8000/data/latlong/' + lowerStr + ":" + upperStr + "/", createMarkers);
 	}
 		
 	function createMarkers(data){
@@ -51,21 +58,19 @@
         });
 	}
 	
-	function updateMarkers(){
-	    var lower = new Date($("#slider").slider("values", 0))
-	    var upper = new Date($("#slider").slider("values", 1))
-	    var lowerStr = (lower.getMonth()+1) + "-01-" + lower.getFullYear();
-	    var lastUpperDate = (new Date((new Date(upper.getYear(), upper.getMonth()+1,1))-1)).getDate();
-	    var upperStr = (upper.getMonth()+1) + "-" + lastUpperDate + "-" + upper.getFullYear();
-	    $.getJSON('http://localhost:8000/data/latlong/' + lowerStr + ":" + upperStr + "/", createMarkers);
-	}
-	
 	function showName(marker){
 	    if(marker && marker.table_id){
-	        $.getJSON('http://localhost:8000/data/albums/' + marker.table_id + "/", function(data){
+	        query = ""
+	        if(lowerStr == "" && upperStr == ""){
+	            query = 'http://localhost:8000/data/albums/' + marker.table_id + "/"
+	        } else{
+	            query = 'http://localhost:8000/data/albums/' + marker.table_id + "/" + lowerStr + ":" + upperStr + "/"
+	        }
+	        
+	        $.getJSON(query, function(data){
     	        albumStr = "";
     	        $(data).each(function(index){
-                    albumStr += "<a target=\"_blank\" href=\"" + data[index]['fields']['publicurl'] + "\">" + data[index]['fields']['name'] + "</a><br/>";
+                    albumStr += "<a target=\"_blank\" href=\"" + data[index]['fields']['url'] + "\">" + data[index]['fields']['name'] + "</a><br/>";
     	        });
     	        
     	        if(openWindow){

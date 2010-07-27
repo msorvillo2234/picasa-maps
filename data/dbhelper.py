@@ -26,8 +26,8 @@ def importAlbums(album_list):
         loc_obj, created = Location.objects.get_or_create(name=album['gphoto$location']['$t'], defaults={'lat':pointStr[0], 'lng': pointStr[1]})
         Album.objects.get_or_create(name=album['title']['$t'],
                              cover=album['media$group']['media$thumbnail'][0]['url'],
-                             publicurl=album['link'][1]['href'],
-                             apiurl=album['id']['$t'],
+                             url=album['link'][1]['href'],
+                             feed=album['id']['$t'],
                              date = datetime.datetime.strptime(album['published']['$t'], "%Y-%m-%dT%H:%M:%S.000Z"),
                              location=loc_obj)
                 
