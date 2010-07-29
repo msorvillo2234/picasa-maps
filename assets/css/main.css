@@ -1,15 +1,21 @@
-html, body {height:100%; background-color:#cccccc; color:#000000; font: 13px/1.3 "Lucida Grande", Lucida, Verdana, sans-serif;}
+/* xxx TODO - make gallery a fluid width with x padding */ 
+
+html, body {height:100%; background-color:#ffffff; color:#000000; font: 12px/1.3 "Lucida Grande", Lucida, Verdana, sans-serif; overflow:hidden;}
 a{color:#888888;}
 a:hover, a:active, a.selected{text-decoration:underline;}
 a:focus{outline:none;}
 h1, h2, h3, h4, h5{font-weight:normal;}
-h1{float:left; margin-top:5px; font-size:22px; color:#fff;}
-h2 {font-size:22px;}
+h1{margin:5px 0 0 13px; font-size:16px; color:#fff;}
+.roundbottom {-moz-border-radius-bottomleft:5px; -moz-border-radius-bottomright:5px; -webkit-border-bottom-left-radius: 5px; -webkit-border-bottom-right-radius: 5px;}
+.roundtop{-moz-border-radius-topleft:5px; -moz-border-radius-topright:5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px;}
 
-#document{width:940px; margin:0 auto;}
-#header{width:100%; background-color:#000;}
-#header p{float:left; font-size:22px; margin-left:10px; margin-top:5px; color:#ccc;}
-#header #slider{width:400px; margin:10px 25px 0 0; float:right;}
-#content {background-color:#fff;}
-#content #map{width:100%; height:600px;}
-#content p{padding:20px 0; text-align:center;}
+#document{width:100%; height:100%; margin:0 auto;}
+#header{position:absolute; width:365px; margin-left:90px; background-color:#000; opacity:0.9; z-index:2;}
+#header div#slider{float:left; width:200px; margin:10px 10px 10px 20px;}
+#header p{float:left; margin-top:8px; color:#ccc;}
+#map{position:absolute; width:100%; height:100%; z-index:1;}
+#gallery{position:absolute;bottom:0; width:70%; height:200px; margin:0 90px -10px 90px; background-color:#fff; border:1px solid #888888}
+#gallery div#title {padding:10px; border-bottom:1px solid #888;}
+#gallery div#title img{display:block; float:left; width:70px; height:70px; margin-right:10px;}
+#gallery div#title h2{font-size:18px; font-weight:bold;}
+#gallery div#title em{color:#888;}

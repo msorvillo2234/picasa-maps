@@ -1,9 +1,8 @@
-//xxx TODO - get jqueryui to call google code version?
-
 (function($) {
-	var map, openWindow, markers = [], sliderInit = false, lowerStr = "", upperStr = "", sliderMin = -1, sliderMax = -1;
+	var map, markers = [], sliderInit = false, lowerStr = "", upperStr = "", sliderMin = -1, sliderMax = -1;
 	
 	$(document).ready(function(){    
+	    $("#gallery").css("display", "none");
 		initMap();
 	});	
 	
@@ -28,10 +27,8 @@
 	}
 		
 	function createMarkers(data){
-	    //close openwindows
-        if(openWindow){
-            openWindow.close();
-        }
+	    //kill gallery
+        $("#gallery").css("display", "none");
         
         //clear current markers
         for (i in markers) {
@@ -40,11 +37,11 @@
 
 	    //set slider bounds
 	    if(!sliderInit){
-	        initSlider(parseDate(data[0]['mindate']), parseDate(data[0]['maxdate']));
+	        initSlider(parseDate(data['mindate']), parseDate(data['maxdate']));
         }
         
 	    //iterate and create markers for all json location data
-	    locs = data[0]['locations'];
+	    locs = data['locations'];
 	    $(locs).each(function(index){
             loc = locs[index];
             var marker = new google.maps.Marker({
@@ -54,11 +51,11 @@
                 table_id: loc['pk']
             });
             markers.push(marker);
-            google.maps.event.addListener(marker, 'click', function(){showName(marker)});
+            google.maps.event.addListener(marker, 'click', function(){showAlbums(marker)});
         });
 	}
 	
-	function showName(marker){
+	function showAlbums(marker){
 	    if(marker && marker.table_id){
 	        query = ""
 	        if(lowerStr == "" && upperStr == ""){
@@ -68,19 +65,16 @@
 	        }
 	        
 	        $.getJSON(query, function(data){
-    	        albumStr = "";
-    	        $(data).each(function(index){
-                    albumStr += "<a target=\"_blank\" href=\"" + data[index]['fields']['url'] + "\">" + data[index]['fields']['name'] + "</a><br/>";
-    	        });
-    	        
-    	        if(openWindow){
-    	            openWindow.close();
-    	        }
-    	        
-    	        openWindow = new google.maps.InfoWindow({
-                    content: "<strong>Albums in " + marker.title + "</a></strong><br/><br/>" + albumStr
-                });
-    	        openWindow.open(map, marker);
+	            if(data.length == 1){
+	                $("#gallery").css("display", "block");
+	                $("#gallery img").attr("src", data[0]['fields']['cover']);
+	                $("#gallery h2").html(data[0]['fields']['name']);
+	                $("#gallery p").html(marker.title);
+	                $("#gallery em").html(dateToString(data[0]['fields']['date']));
+	                //$("#gallery em").attr("src", data[0]['fields']['date']);
+                } else{
+                    console.log("more than one album")
+                }
     	    });
 
 	    }
@@ -110,8 +104,8 @@
 	/***************************** DATE HELPERS *****************************/
 	
 	function parseDate(posixdate){
-	    date = posixdate.split("T")[0].split("-")
-	    time = posixdate.split("T")[1].split(":")
+	    var date = posixdate.split("T")[0].split("-")
+	    var time = posixdate.split("T")[1].split(":")
 	    return Date.UTC(Number(date[0]), 
 	                    Number(date[1]) - 1, 
 	                    Number(date[2]), 
@@ -123,6 +117,12 @@
 	function intToDate(int){
 	    var ary = new Date(int).toDateString().split(" ")
 	    return ary[1] + " " + ary[3]
+	}
+	
+	function dateToString(from){
+	    var ary = from.split(" ")[0].split("-")
+	    var date = new Date(ary[0], ary[1], ary[2]).toDateString().split(" ")
+	    return date[1] + " " + date[2] + ", " + date[3]
 	}
 	
 })(jQuery);

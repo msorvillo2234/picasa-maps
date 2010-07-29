@@ -36,7 +36,7 @@ def latlong(request, daterange=None):
     maxdate = Album.objects.aggregate(Max('date'))        
     strmin = (mindate['date__min']).isoformat()
     strmax = (maxdate['date__max']).isoformat()    
-    feed = [{'mindate':strmin, 'maxdate':strmax, 'locations':locs}]
+    feed = {'mindate':strmin, 'maxdate':strmax, 'locations':locs}
     return HttpResponse(json.dumps(feed, cls=MyJSONEncoder))
 
 
