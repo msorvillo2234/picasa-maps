@@ -27,7 +27,7 @@ def importAlbums(album_list):
         Album.objects.get_or_create(name=album['title']['$t'],
                              cover=album['media$group']['media$thumbnail'][0]['url'],
                              url=album['link'][1]['href'],
-                             feed=album['id']['$t'],
+                             feed=album['link'][0]['href'],
                              date = datetime.datetime.strptime(album['published']['$t'], "%Y-%m-%dT%H:%M:%S.000Z"),
                              location=loc_obj)
                 

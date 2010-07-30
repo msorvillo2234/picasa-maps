@@ -1,8 +1,17 @@
+//xxx TODO - links to actual pictures
+//xxx TODO - handle case for more than 1 album
+//xxx TODO - add number of photos in album
+//xxx TODO - loader
+
 (function($) {
 	var map, markers = [], sliderInit = false, lowerStr = "", upperStr = "", sliderMin = -1, sliderMax = -1;
 	
 	$(document).ready(function(){    
 	    $("#gallery").css("display", "none");
+	    $("#gallery div#title a").click(function(event){
+	       event.preventDefault();
+           $("#gallery").css("display", "none");
+	    });
 		initMap();
 	});	
 	
@@ -28,7 +37,7 @@
 		
 	function createMarkers(data){
 	    //kill gallery
-        $("#gallery").css("display", "none");
+        //$("#gallery").css("display", "none");
         
         //clear current markers
         for (i in markers) {
@@ -67,17 +76,28 @@
 	        $.getJSON(query, function(data){
 	            if(data.length == 1){
 	                $("#gallery").css("display", "block");
-	                $("#gallery img").attr("src", data[0]['fields']['cover']);
+	                $("#gallery div#title img").attr("src", data[0]['fields']['cover']);
 	                $("#gallery h2").html(data[0]['fields']['name']);
 	                $("#gallery p").html(marker.title);
 	                $("#gallery em").html(dateToString(data[0]['fields']['date']));
-	                //$("#gallery em").attr("src", data[0]['fields']['date']);
+                    $.getJSON(data[0]['fields']['feed'], loadThumbs)
                 } else{
                     console.log("more than one album")
                 }
     	    });
 
 	    }
+	}
+	
+	function loadThumbs(data){
+	    $("#gallery div#content").empty();
+	    
+	    var photos = data['feed']['entry']
+	    $(photos).each(function(index){
+	        var photo = photos[index];
+	        var img = $('<img/>').attr("src", photo['media$group']['media$thumbnail'][1]['url'])
+	        $("#gallery div#content").append(img);
+	    });
 	}
 	
 	function initSlider(minDate, maxDate){        

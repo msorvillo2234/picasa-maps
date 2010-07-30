@@ -1,4 +1,4 @@
-#xxx TODO - try to overhaul time to use datetime? (need to divide by 1000)
+#xxx TODO - refactor to get rid of album table?
 
 from django.http import HttpResponse
 from models import Location, Album, Photo
