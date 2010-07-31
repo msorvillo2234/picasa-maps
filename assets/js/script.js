@@ -1,7 +1,8 @@
-//xxx TODO - links to actual pictures
+//xxx TODO - center background images
+//xxx TODO - reformat data in gallery title
 //xxx TODO - handle case for more than 1 album
-//xxx TODO - add number of photos in album
 //xxx TODO - loader
+//xxx TODO - add thumbs or gallery toggler
 
 (function($) {
 	var map, markers = [], sliderInit = false, lowerStr = "", upperStr = "", sliderMin = -1, sliderMax = -1;
@@ -37,7 +38,7 @@
 		
 	function createMarkers(data){
 	    //kill gallery
-        //$("#gallery").css("display", "none");
+        $("#gallery").css("display", "none");
         
         //clear current markers
         for (i in markers) {
@@ -92,11 +93,16 @@
 	function loadThumbs(data){
 	    $("#gallery div#content").empty();
 	    
+	    //also append numphotos
+	    $("#gallery em").append(" - " + data['feed']['gphoto$numphotos']['$t'] + " photos")
+	    
 	    var photos = data['feed']['entry']
 	    $(photos).each(function(index){
 	        var photo = photos[index];
-	        var img = $('<img/>').attr("src", photo['media$group']['media$thumbnail'][1]['url'])
-	        $("#gallery div#content").append(img);
+	        var thumb = $('<a>').attr("href", photo['link'][1]['href']);
+	        thumb.attr("target", "_blank");
+	        thumb.css("background", "url(\"" + photo['media$group']['media$thumbnail'][1]['url'] + "\")");
+	        $("#gallery div#content").append(thumb);
 	    });
 	}
 	

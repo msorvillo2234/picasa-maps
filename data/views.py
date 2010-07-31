@@ -1,4 +1,4 @@
-#xxx TODO - refactor to get rid of album table?
+#xxx TODO - refactor album table to just be IDs?
 
 from django.http import HttpResponse
 from models import Location, Album, Photo
