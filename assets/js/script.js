@@ -1,5 +1,3 @@
-//xxx TODO - center background images
-//xxx TODO - reformat data in gallery title
 //xxx TODO - handle case for more than 1 album
 //xxx TODO - loader
 //xxx TODO - add thumbs or gallery toggler
@@ -24,7 +22,7 @@
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         map = new google.maps.Map($("div#map").get(0), myOptions);  
-        $.getJSON('http://localhost:8000/data/latlong/', createMarkers); 
+        $.getJSON('http://localhost:8000/data/locations/', createMarkers); 
 	}
 		
 	function updateMarkers(){
@@ -33,7 +31,7 @@
 	    lowerStr = (lower.getMonth()+1) + "-01-" + lower.getFullYear();
 	    var lastUpperDate = (new Date((new Date(upper.getYear(), upper.getMonth()+1,1))-1)).getDate();
 	    upperStr = (upper.getMonth()+1) + "-" + lastUpperDate + "-" + upper.getFullYear();
-	    $.getJSON('http://localhost:8000/data/latlong/' + lowerStr + ":" + upperStr + "/", createMarkers);
+	    $.getJSON('http://localhost:8000/data/locations/' + lowerStr + ":" + upperStr + "/", createMarkers);
 	}
 		
 	function createMarkers(data){
@@ -79,8 +77,7 @@
 	                $("#gallery").css("display", "block");
 	                $("#gallery div#title img").attr("src", data[0]['fields']['cover']);
 	                $("#gallery h2").html(data[0]['fields']['name']);
-	                $("#gallery p").html(marker.title);
-	                $("#gallery em").html(dateToString(data[0]['fields']['date']));
+	                $("#gallery p").html(dateToString(data[0]['fields']['date']) + " - " + marker.title);
                     $.getJSON(data[0]['fields']['feed'], loadThumbs)
                 } else{
                     console.log("more than one album")
@@ -94,14 +91,14 @@
 	    $("#gallery div#content").empty();
 	    
 	    //also append numphotos
-	    $("#gallery em").append(" - " + data['feed']['gphoto$numphotos']['$t'] + " photos")
+	    $("#gallery em").html(data['feed']['gphoto$numphotos']['$t'] + " photos")
 	    
 	    var photos = data['feed']['entry']
 	    $(photos).each(function(index){
 	        var photo = photos[index];
 	        var thumb = $('<a>').attr("href", photo['link'][1]['href']);
 	        thumb.attr("target", "_blank");
-	        thumb.css("background", "url(\"" + photo['media$group']['media$thumbnail'][1]['url'] + "\")");
+	        thumb.css("background", "url(\"" + photo['media$group']['media$thumbnail'][1]['url'] + "\")" + "50% 50%");
 	        $("#gallery div#content").append(thumb);
 	    });
 	}

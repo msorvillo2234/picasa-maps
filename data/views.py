@@ -16,7 +16,7 @@ class MyJSONEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self,obj)
 
 
-def latlong(request, daterange=None):
+def getlocations(request, daterange=None):
     """Returns JSON of latlongs from the DB. If they don't exist in DB, we import the data from picasa"""
     
     dbhelper.checkfordata()
@@ -38,12 +38,6 @@ def latlong(request, daterange=None):
     strmax = (maxdate['date__max']).isoformat()    
     feed = {'mindate':strmin, 'maxdate':strmax, 'locations':locs}
     return HttpResponse(json.dumps(feed, cls=MyJSONEncoder))
-
-
-def getallalbums(request):
-    """Returns JSON of all albums from DB"""
-    return HttpResponse(serializers.serialize("json", Album.objects.all()))
-
 
 def getalbums(request, location_id, daterange=None):
     """Given locationID and dateranage, returns JSON of albums in that location from DB"""

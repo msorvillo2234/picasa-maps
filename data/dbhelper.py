@@ -18,7 +18,7 @@ def checkfordata():
 
 
 def importAlbums(album_list):
-    """Takes a list of albums, and creates album and location entries in DB"""
+    """Takes a list of albums, and creates location and album entries in DB"""
 
     for album in album_list:
         point = str(album['georss$where']['gml$Point']['gml$pos']['$t'])
